@@ -1,0 +1,73 @@
+Redes 1:
+1 - Elaborar uma topologia linear com 5 OpenVSwitches (não fechar o loop ainda!). Incluir dois hosts, em switches distintos, configurados com os IPs: 192.168.0.1 e 192.168.0.2. Utilizar o link entre os switches COM vlan trunk (802.1q, tagged). 
+Utilizar como ID da vlan os 3 últimos dígitos do seu GRR.  Um host deve ser configurado no modo access (untagged) e o outro no modo trunk (tagged). Verificar que os hosts estão se comunicando através do comando ping. 
+
+2 - Provocar e identificar um loop de camada 2.
+
+3 - Configurar STP (spanning-tree) para evitar loop
+
+4 - Descrever o status e a função de algumas portas para explicar como que o loop foi evitado com STP.
+
+5 - Verificar o tempo de convergência habilitando e desabilitando o loop.
+
+6 - Voltar ao passo 3 e alterar a configuração para RSTP (rapid spanning-tree, passo b)
+
+7 - Criar um Link-Aggregation (802.3ad) entre pelo menos dois switches (ou todos!) com rápida convergência, LACP habilitado e balanceamento usando TCP. Verificar o seu funcionamento. 
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Redes 2:
+Trabalho Camada de Redes 
+
+1) Elaborar um plano de endereçamento para uma organização que necessita de 600 endereços entre duas filiais, uma em SP e outra no PR. A filial de SP está dividida em 4 departamentos e a do PR em apenas um. A demanda de endereçamento é a seguinte:
+
+SP1: 230 endereços
+
+SP2: 150 endereços
+
+SP3: 100 endereços
+
+SP4: 70 endereços
+
+PR1: 50 endereços
+
+- Utilizar um espaço de endereçamento contíguo para a organização proveniente de 200.GRR.0.0/19, onde GRR é o resto da divisão do números do seu GRR por 255, ou seja, GRR % 255. Exemplo:  20205176 % 255 == 251
+
+2)  Configurar o GNS3 para endereçar os 5 departamentos, configurados com um roteador central, ligado a outros dois roteadores, um para SP e outro para PR. 
+Os 3 roteadores precisam ser Linux (ajustar a quantidade de adaptadores). A ligação dos roteadores deve utilizar endereçamento privado da rede 192.168.XXX.0/24 através de sub-redes /30. 
+Incluir ao menos 1 host em cada sub-rede conectado através de um switch ethernet.
+
+
+3) Estabelecer todas as rotas para os prefixos de rede utilizados. Assim:
+
+- Todos os end-hosts (clientes) devem ter rota default para um roteador diretamente conectado.
+
+- Uma rota para blackhole que contenha toda alocação para a instituição deve ser colocado no roteador Central. 
+
+- O roteador central deve rotear cada prefixo de cada departamento/filial para o roteador correspondente (SP ou PR).
+
+- Os roteadores de SP e PR devem possuir um rota para a alocação da instituição através do roteador central.
+
+- Os roteadores de SP e PR devem possuir uma rota para o /30 que não está diretamente conectado através do roteador central.
+
+Realizar testes de pings entre um host de SP1 e outro de SP2; entre um host de SP1 e o roteador de SP; entre um host de SP2 e o roteador central; entre um host de SP3 o roteador do PR; entre um host de SP4 e um host do PR; 
+
+Realizar traceroute entre um host de SP1 e um host do PR e entre um host de SP2 e um endereço IP que ficou sem uso.  
+
+4) Substitua os 4 switches ligados ao roteador de SP por apenas um switch configurável do tipo OpenVSwitch. 
+O roteador de SP deve ter apenas duas interfaces: Uma interface WAN (eth0) ligada ao roteador Central e outra para LAN (eth1) ligada no switch em modo VLAN 802.1Q, com os IDs 100, 200, 300 e 400 para os departamentos SP1, SP2, SP3 e SP4, respectivamente. 
+
+- Criar as seguintes sub-interfaces eth1.100, eth1.200, eth1.300 e eth1.400 no roteador de SP. 
+
+- Crie as 4 VLANs no OpenVSwitch para se comunicar com o roteador de SP em modo trunk (tagged) e com os clientes (end-hosts) em modo access (sem vlan). 
+
+- Refazer os testes de pings do item 3.
+
+5) Reconfigurar os roteadores para trabalhar com OSPF. Deixar apenas uma rota de todo o prefixo da instituição para blackhole no roteador Central. Redistribuir todas as rotas (conectadas e rotas estáticas) nos roteadores Central, SP e PR. 
+
+
+
+
+
+
+
